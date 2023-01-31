@@ -1,0 +1,72 @@
+﻿@model MiHotel.Common.Entities.Hotel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Hotel</h1>
+
+<div>
+    <h4>Nombre: @Model.RazonSocial</h4>
+    @*<dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RazonSocial)
+        </dd>
+    </dl>*@
+</div>
+<table class="table table-hover table-responsive table-striped" >
+    <thead>
+        <tr>
+            <th>
+                Número/Nombre
+            </th>
+            <th>
+                Ocupada
+            </th>
+            <th>
+                Imagen
+            </th>
+            <th>
+                @Model.RazonSocial
+            </th>
+            <th>
+                <a class="btn btn-primary" asp-controller="Habitaciones" asp-action="Create" asp-route-id="@Model.Id">Nueva</a>
+            </th>
+        </tr>
+    </thead>
+@if (Model.Habitaciones.Count == 0)
+{
+        <tr>
+            <td colspan="3">No cuenta con habitaciones</td>
+        </tr>
+}
+else
+{
+        <tbody>
+            @foreach (var item in Model.Habitaciones)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroStr)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ocupada)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Foto)
+                    </td>
+                    <td>
+                        <a class="btn btn-info" asp-controller="Habitaciones" asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+                        <a class="btn btn-danger" asp-controller="Habitaciones" asp-action="Delete" asp-route-id="@Model.Id">Borrar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>    
+}
+</table>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

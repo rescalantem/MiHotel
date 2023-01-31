@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MiHotel.Common.Entities.Hotel>
+
+@{
+    ViewData["Title"] = "Hoteles";
+}
+
+<h1>Hoteles</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Nuevo</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RazonSocial)
+            </th>
+            <th>
+                # Habs
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RazonSocial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Habitaciones.Count)
+            </td>
+            <td>
+                    <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.Id">Habitaciones</a> |
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Borrar</a>
+                @*<a asp-controller="Habitaciones" asp-action="Index" asp-route-id="@item.Id">Habitaciones</a>*@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+

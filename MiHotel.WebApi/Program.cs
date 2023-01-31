@@ -12,6 +12,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(ops => 
     ops.UseSqlServer(builder.Configuration.GetConnectionString("Conexion")));
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 //Si no existe DB la crea.
