@@ -4,7 +4,30 @@
              xmlns:local="clr-namespace:MiHotel.Maui"
              x:Class="MiHotel.Maui.App">
     <Application.Resources>
-        <ResourceDictionary>
+        <ResourceDictionary>            
+            <x:String x:Key="UrlAPI">http://rescalante-001-site2.ftempurl.com</x:String>
+            
+            <!-- Colors -->
+            <Color x:Key="ColorBackground">#FFF0FFF0</Color>
+            <Color x:Key="ColorPrimary">#FF008800</Color>
+            <Color x:Key="ColorSecondary">#8C8C8C</Color>
+            <Color x:Key="ColorDanger">#FF006400</Color>
+            <Color x:Key="ColorAccent">#FF32CD32</Color>
+            <Color x:Key="ColorFont">#0D0D0D</Color>
+            <Color x:Key="ColorText">White</Color>
+            <Color x:Key="ColorFontInverse">#D9D9D9</Color>
+
+            <!-- Styles -->
+            <Style x:Key="TamFuente" TargetType="Label">
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="TextColor" Value="{StaticResource ColorText}"/>
+            </Style>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="{StaticResource ColorText}"/>
+                <Setter Property="Padding" Value="24,8"/>
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorPrimary}"/>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />

@@ -8,7 +8,8 @@ namespace MiHotel.Common.Entities
         [MaxLength(10, ErrorMessage = "El campo {0}, solo acepta {1} caracteres!")]
         public string NumeroStr { get; set; }
         public bool Ocupada { get; set; }
-        public byte[] Foto { get; set; }
+        [MaxLength(17,ErrorMessage = "El campo {0}, solo acepta {1} caracteres!")]
+        public string EspMacAdd { get; set; }
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
         public List<Estancia> Estancias { get; set; } = new List<Estancia>();

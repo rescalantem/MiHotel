@@ -60,8 +60,29 @@ namespace MiHotel.WebApi.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(hotel);
-        }
+        }        
+        public async Task<IActionResult> CreateHabitacion(int? HotelId)
+        {
+            if (HotelId == null) { return NotFound(); }
+            
+            var hotel = _context.Hoteles.FindAsync(HotelId.Value);            
+            if (hotel == null) { return NotFound(); }
 
+            var habit = new Habitacion
+            {
+                HotelId = HotelId.Value
+            };
+            return View(habit);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateHabitacion(Habitacion habit)
+        {
+            habit.Ocupada = false;
+            _context.Habitaciones.Add(habit);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            //return RedirectToAction($"Details/{habit.HotelId}");
+        }
         // GET: Hoteles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

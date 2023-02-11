@@ -1,4 +1,4 @@
-﻿@model MiHotel.Common.Entities.Habitacion
+﻿@model MiHotel.Common.Entities.Estancia
 
 @{
     ViewData["Title"] = "Details";
@@ -7,32 +7,32 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Habitacion</h4>
+    <h4>Estancia</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumeroStr)
+            @Html.DisplayNameFor(model => model.Habitacion)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumeroStr)
+            @Html.DisplayFor(model => model.Habitacion.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ocupada)
+            @Html.DisplayNameFor(model => model.Huesped)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ocupada)
+            @Html.DisplayFor(model => model.Huesped.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EspMacAdd)
+            @Html.DisplayNameFor(model => model.Alta)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EspMacAdd)
+            @Html.DisplayFor(model => model.Alta)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hotel)
+            @Html.DisplayNameFor(model => model.Baja)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hotel.Id)
+            @Html.DisplayFor(model => model.Baja)
         </dd>
     </dl>
 </div>

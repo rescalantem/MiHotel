@@ -1,4 +1,6 @@
-﻿namespace MiHotel.Common.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MiHotel.Common.Entities
 {
     public class Estancia
     {
@@ -9,5 +11,7 @@
         public Huesped Huesped { get; set; }
         public DateTime Alta { get; set; }
         public DateTime Baja { get; set; }
+        [NotMapped]
+        public byte[] Data { get; set; }
     }
 }

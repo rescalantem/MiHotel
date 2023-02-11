@@ -33,6 +33,7 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\Images\logo2.png" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -49,7 +50,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiImage Remove="Resources\Images\logo2.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Images\logo1.png" />
+	  <None Remove="Resources\Images\logo2.png" />
+	  <None Remove="Resources\Images\logo3.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="ZXing.Net.Maui" Version="0.1.0-preview.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\MiHotel.Common\MiHotel.Common.csproj" />
 	</ItemGroup>
 
 </Project>

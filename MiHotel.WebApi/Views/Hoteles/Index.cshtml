@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<MiHotel.Common.Entities.Hotel>
 
 @{
-    ViewData["Title"] = "Hoteles";
+    ViewData["Title"] = "Index";
 }
 
 <h1>Hoteles</h1>
 
 <p>
-    <a class="btn btn-primary" asp-action="Create">Nuevo</a>
+    <a class="btn btn-primary" asp-action="Create">Alta hotel</a>
 </p>
 <table class="table">
     <thead>
@@ -16,8 +16,9 @@
                 @Html.DisplayNameFor(model => model.RazonSocial)
             </th>
             <th>
-                # Habs
+                Habitaciones
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -27,16 +28,15 @@
                 @Html.DisplayFor(modelItem => item.RazonSocial)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Habitaciones.Count)
+                @item.Habitaciones.Count()
             </td>
             <td>
-                    <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                    <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.Id">Habitaciones</a> |
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Borrar</a>
-                @*<a asp-controller="Habitaciones" asp-action="Index" asp-route-id="@item.Id">Habitaciones</a>*@
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Habitaciones</a> |
+                <a asp-controller="Estancias" asp-action="Create" asp-route-HotelId="@item.Id">Reservar</a> |
+                <a asp-controller="Estancias" asp-action="Index" asp-route-HotelId="@item.Id">Estancias</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
-

@@ -14,8 +14,9 @@ namespace MiHotel.WebApi.Data
         {
             base.OnModelCreating(model);
             // Indice y llave compuesta en tabla estancia, relacion muchos a muchos
-            model.Entity<Huesped>().HasIndex(cam => cam.Telefono).IsUnique();
-            model.Entity<Estancia>().HasIndex(cam => new { cam.HabitacionId, cam.HuespedId });
+            model.Entity<Huesped>().HasIndex(hue => hue.Telefono).IsUnique();
+            model.Entity<Habitacion>().HasIndex(hab => hab.EspMacAdd).IsUnique();
+            model.Entity<Estancia>().HasIndex(est => new { est.HabitacionId, est.HuespedId });
 
             //Alta de dato de prueba
             Huesped hues= new Huesped{ Id = 1, Nombre = "Judith Rangel Diaz", Telefono = "1234567890" };
@@ -28,7 +29,7 @@ namespace MiHotel.WebApi.Data
             {
                 Id = 1,
                 HotelId = 1,
-                Foto = null,
+                EspMacAdd = "00:00:00:00:00:01",
                 NumeroStr = "102",
                 Ocupada = false,
                 Estancias = null
@@ -37,7 +38,7 @@ namespace MiHotel.WebApi.Data
             {
                 Id = 2,
                 HotelId = 1,
-                Foto = null,
+                EspMacAdd = "00:00:00:00:00:02",
                 NumeroStr = "202",
                 Ocupada = false,
                 Estancias = null

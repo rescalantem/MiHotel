@@ -24,9 +24,9 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
+                <label asp-for="EspMacAdd" class="control-label"></label>
+                <input asp-for="EspMacAdd" class="form-control" />
+                <span asp-validation-for="EspMacAdd" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HotelId" class="control-label"></label>
@@ -41,7 +41,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Hoteles" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

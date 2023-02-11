@@ -1,4 +1,4 @@
-﻿@model MiHotel.Common.Entities.Habitacion
+﻿@model MiHotel.Common.Entities.Estancia
 
 @{
     ViewData["Title"] = "Delete";
@@ -8,38 +8,38 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Habitacion</h4>
+    <h4>Estancia</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumeroStr)
+            @Html.DisplayNameFor(model => model.Habitacion)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumeroStr)
+            @Html.DisplayFor(model => model.Habitacion.NumeroStr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ocupada)
+            @Html.DisplayNameFor(model => model.Huesped)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ocupada)
+            @Html.DisplayFor(model => model.Huesped.Nombre)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EspMacAdd)
+            @Html.DisplayNameFor(model => model.Alta)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EspMacAdd)
+            @Html.DisplayFor(model => model.Alta)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hotel)
+            @Html.DisplayNameFor(model => model.Baja)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hotel.Id)
+            @Html.DisplayFor(model => model.Baja)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" asp-route-HotelId="@Model.Habitacion.HotelId">Back to List</a>
     </form>
 </div>

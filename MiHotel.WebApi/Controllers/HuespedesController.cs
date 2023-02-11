@@ -1,95 +1,91 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MiHotel.Common.Entities;
 using MiHotel.WebApi.Data;
 
 namespace MiHotel.WebApi.Controllers
 {
-    public class HabitacionesController : Controller
+    public class HuespedesController : Controller
     {
         private readonly DataContext _context;
 
-        public HabitacionesController(DataContext context)
+        public HuespedesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: Habitaciones
-        public async Task<IActionResult> Index(int Id)
+        // GET: Huespedes
+        public async Task<IActionResult> Index()
         {
-            var dataContext = _context.Habitaciones.Include(h => h.Hotel).Where(hab => hab.HotelId == Id);
-            return View(await dataContext.ToListAsync());
+            return _context.Huespedes != null ?
+                        View(await _context.Huespedes.ToListAsync()) :
+                        Problem("Entity set 'DataContext.Huespedes'  is null.");
         }
 
-        // GET: Habitaciones/Details/5
+        // GET: Huespedes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Habitaciones == null)
+            if (id == null || _context.Huespedes == null)
             {
                 return NotFound();
             }
 
-            var habitacion = await _context.Habitaciones
-                .Include(h => h.Hotel)
+            var huesped = await _context.Huespedes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (habitacion == null)
+            if (huesped == null)
             {
                 return NotFound();
             }
 
-            return View(habitacion);
+            return View(huesped);
         }
 
-        // GET: Habitaciones/Create
+        // GET: Huespedes/Create
         public IActionResult Create()
         {
-            ViewData["HotelId"] = new SelectList(_context.Hoteles, "Id", "RazonSocial");
             return View();
         }
 
-        // POST: Habitaciones/Create
+        // POST: Huespedes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NumeroStr,Ocupada,EspMacAdd,HotelId")] Habitacion habitacion)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Telefono")] Huesped huesped)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(habitacion);
+                _context.Add(huesped);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HotelId"] = new SelectList(_context.Hoteles, "Id", "Id", habitacion.HotelId);
-            return View(habitacion);
+            return View(huesped);
         }
 
-        // GET: Habitaciones/Edit/5
+        // GET: Huespedes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Habitaciones == null)
+            if (id == null || _context.Huespedes == null)
             {
                 return NotFound();
             }
 
-            var habitacion = await _context.Habitaciones.FindAsync(id);
-            if (habitacion == null)
+            var huesped = await _context.Huespedes.FindAsync(id);
+            if (huesped == null)
             {
                 return NotFound();
             }
-            ViewData["HotelId"] = new SelectList(_context.Hoteles, "Id", "Id", habitacion.HotelId);
-            return View(habitacion);
+            return View(huesped);
         }
 
-        // POST: Habitaciones/Edit/5
+        // POST: Huespedes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NumeroStr,Ocupada,EspMacAdd,HotelId")] Habitacion habitacion)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Telefono")] Huesped huesped)
         {
-            if (id != habitacion.Id)
+            if (id != huesped.Id)
             {
                 return NotFound();
             }
@@ -98,12 +94,12 @@ namespace MiHotel.WebApi.Controllers
             {
                 try
                 {
-                    _context.Update(habitacion);
+                    _context.Update(huesped);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HabitacionExists(habitacion.Id))
+                    if (!HuespedExists(huesped.Id))
                     {
                         return NotFound();
                     }
@@ -114,51 +110,49 @@ namespace MiHotel.WebApi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HotelId"] = new SelectList(_context.Hoteles, "Id", "Id", habitacion.HotelId);
-            return View(habitacion);
+            return View(huesped);
         }
 
-        // GET: Habitaciones/Delete/5
+        // GET: Huespedes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Habitaciones == null)
+            if (id == null || _context.Huespedes == null)
             {
                 return NotFound();
             }
 
-            var habitacion = await _context.Habitaciones
-                .Include(h => h.Hotel)
+            var huesped = await _context.Huespedes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (habitacion == null)
+            if (huesped == null)
             {
                 return NotFound();
             }
 
-            return View(habitacion);
+            return View(huesped);
         }
 
-        // POST: Habitaciones/Delete/5
+        // POST: Huespedes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Habitaciones == null)
+            if (_context.Huespedes == null)
             {
-                return Problem("Entity set 'DataContext.Habitaciones'  is null.");
+                return Problem("Entity set 'DataContext.Huespedes'  is null.");
             }
-            var habitacion = await _context.Habitaciones.FindAsync(id);
-            if (habitacion != null)
+            var huesped = await _context.Huespedes.FindAsync(id);
+            if (huesped != null)
             {
-                _context.Habitaciones.Remove(habitacion);
+                _context.Huespedes.Remove(huesped);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HabitacionExists(int id)
+        private bool HuespedExists(int id)
         {
-            return (_context.Habitaciones?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Huespedes?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
