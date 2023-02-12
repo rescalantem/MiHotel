@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MiHotel.Maui.Services;
 using ZXing.Net.Maui;
 
 namespace MiHotel.Maui
@@ -22,6 +23,8 @@ namespace MiHotel.Maui
                 h.AddHandler(typeof(ZXing.Net.Maui.Controls.CameraView), typeof(CameraViewHandler));
                 h.AddHandler(typeof(ZXing.Net.Maui.Controls.BarcodeGeneratorView), typeof(BarcodeGeneratorViewHandler));
             });
+            builder.Services.AddSingleton<ApiService>();
+
 
 #if DEBUG
             builder.Logging.AddDebug();

@@ -2,9 +2,20 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Title="Acceso a su habitación"
              x:Class="MiHotel.Maui.MainPage">
     <AbsoluteLayout>
-
+        <Label
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            x:Name="lblAviso"
+            FontSize="Large"
+            VerticalOptions="StartAndExpand"
+            Padding="0,20"
+            HorizontalOptions="CenterAndExpand"
+            Text="Lea el QR de su habitación"
+            />
         <VerticalStackLayout
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
@@ -16,26 +27,44 @@
             x:Name="barcodeReader"
             WidthRequest="300" 
             HeightRequest="300"
+            VerticalOptions="StartAndExpand"
             IsDetecting="True" 
             IsTorchOn="False" 
-            BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected" />
+            BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected" />            
         </VerticalStackLayout>
-        <VerticalStackLayout
+        <StackLayout
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             x:Name="staAbrir">
+            <Label
+                x:Name="lblHotel"
+                FontSize="35"
+                Margin="0,10"
+                HorizontalOptions="Center"/>
+            <Label
+                x:Name="lblHabitacion"
+                FontSize="Large"
+                HorizontalOptions="Center"/>
+            <Label
+                x:Name="lblVence"
+                FontSize="Medium"
+                Margin="0,10"
+                HorizontalOptions="Center"/>
+            <ImageButton
+                x:Name="btnAbrir"
+                Clicked="btnAbrir_Clicked"
+                VerticalOptions="Start"
+                WidthRequest="250"
+                HeightRequest="250"
+                Margin="0,0,0,50"
+                Source="llaveima1"/>
             <Button
                 x:Name="CounterBtn"
                 Style="{StaticResource ButtonStyle}"
-                Text="Borrar Llave"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-            <Button
-                x:Name="btnAbrir"
-                Text="Abrir"
-                Style="{StaticResource ButtonStyle}"
-                Clicked="btnAbrir_Clicked"
-                HorizontalOptions="Center" />
-        </VerticalStackLayout>
+                FontSize="Medium"
+                WidthRequest="200"
+                Text="Entregar llave"
+                Clicked="OnCounterClicked"/>
+        </StackLayout>
     </AbsoluteLayout>
 </ContentPage>

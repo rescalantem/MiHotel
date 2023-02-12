@@ -1,4 +1,7 @@
 ﻿using MiHotel.Common;
+using MiHotel.Common.Entities;
+using MiHotel.Maui.Services;
+using System.Runtime.InteropServices;
 using ZXing.Net.Maui;
 
 namespace MiHotel.Maui
@@ -11,14 +14,20 @@ namespace MiHotel.Maui
         string topic_config = "E0:5A:1B:75:A7:44/config";
         string topic_abrir = "E0:5A:1B:75:A7:44/abrir";
         string tmp = "";
+        private readonly ApiService _apiService;
+        private readonly string UrlApi = Application.Current.Resources["UrlAPI"].ToString();
+
+        //private readonly string token = JsonConvert.DeserializeObject<TokenResponse>(Preferences.Get("Token", string.Empty)).Token;
         public MainPage()
         {
             InitializeComponent();
+            _apiService = new ApiService();
             
+            //Preferences.Set("qrLlave", "f7483b94-5580-4927-911b-bc9ff6eeec33");
 
-            clsMQtt.Conectar(MacEsp , broker);
+            clsMQtt.Conectar(MacEsp, broker);
             clsMQtt.Conectado += Conectado;
-            
+
             barcodeReader.Options = new BarcodeReaderOptions()
             {
                 Formats = BarcodeFormat.QrCode
@@ -28,18 +37,36 @@ namespace MiHotel.Maui
             {
                 staAbrir.IsVisible = true;
                 staScanner.IsVisible = false;
+                lblAviso.IsVisible = false;
+                CargaDatos();
             }
             else
             {
                 staAbrir.IsVisible = false;
                 staScanner.IsVisible = true;
+                lblAviso.IsVisible = true;
             }            
+        }
+        async void CargaDatos()
+        {
+            var res = await _apiService.GetItemAsync<Estancia>(UrlApi, "/api", $"/Estancias/{Preferences.Get("qrLlave",string.Empty)}", "");
+            if (!res.IsSuccess)
+            {
+                await App.Current.MainPage.DisplayAlert("Alerta", $"Error: {res.Message}", "Ok");
+                return;
+            }
+            Estancia tmp = (Estancia)res.Result;
+
+            lblHotel.Text = "Mi Hotel";
+            lblHabitacion.Text = $"Su habitacion es: {tmp.Habitacion.NumeroStr}";
+            lblVence.Text = $"Vence: {tmp.Baja.ToString("g")}";
+
         }
         private void CameraBarcodeReaderView_BarcodesDetected(object sender, BarcodeDetectionEventArgs e)
         {
             Dispatcher.Dispatch(() =>
             {
-                if(tmp != e.Results[0].Value.ToString())
+                if (tmp != e.Results[0].Value.ToString())
                 {
                     tmp = e.Results[0].Value.ToString();
 
@@ -48,12 +75,14 @@ namespace MiHotel.Maui
                     clsMQtt.Publicar(topic_config, tmp);
 
                     staScanner.IsVisible = false;
+                    lblAviso.IsVisible = false;
                     staAbrir.IsVisible = true;
 
                     Vibration.Vibrate();
 
                     Console.WriteLine($"#### Enviando: {tmp}");
-                }                
+                }
+
             });
         }
         private void OnCounterClicked(object sender, EventArgs e)
@@ -61,8 +90,9 @@ namespace MiHotel.Maui
             Preferences.Clear();
             tmp = "";
             staScanner.IsVisible = true;
+            lblAviso.IsVisible = true;
             staAbrir.IsVisible = false;
-            Vibration.Vibrate();            
+            Vibration.Vibrate();
         }
         private void Conectado(object sender, EventArgs e)
         {
@@ -71,7 +101,7 @@ namespace MiHotel.Maui
         }
         private void btnAbrir_Clicked(object sender, EventArgs e)
         {
-            if (mqttConectado) clsMQtt.Publicar(topic_abrir, Preferences.Get("qrLlave","sinllave"));
+            if (mqttConectado) clsMQtt.Publicar(topic_abrir, Preferences.Get("qrLlave", "sinllave"));
         }
     }
 }

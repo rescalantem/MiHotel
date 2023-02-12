@@ -4,9 +4,9 @@
              xmlns:local="clr-namespace:MiHotel.Maui"
              x:Class="MiHotel.Maui.App">
     <Application.Resources>
-        <ResourceDictionary>            
-            <x:String x:Key="UrlAPI">http://rescalante-001-site2.ftempurl.com</x:String>
-            
+        <ResourceDictionary>
+            <x:String x:Key="UrlAPI">http://rescalante-001-site3.ftempurl.com</x:String>
+
             <!-- Colors -->
             <Color x:Key="ColorBackground">#FFF0FFF0</Color>
             <Color x:Key="ColorPrimary">#FF008800</Color>
@@ -25,7 +25,6 @@
             <Style x:Key="ButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="{StaticResource ColorText}"/>
                 <Setter Property="Padding" Value="24,8"/>
-                <Setter Property="HorizontalOptions" Value="Fill"/>
                 <Setter Property="BackgroundColor" Value="{StaticResource ColorPrimary}"/>
             </Style>
             <ResourceDictionary.MergedDictionaries>
