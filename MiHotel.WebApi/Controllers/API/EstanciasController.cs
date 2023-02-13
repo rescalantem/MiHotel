@@ -30,11 +30,14 @@ namespace MiHotel.WebApi.Controllers.API
             var estancia = await _context.Estancias.FindAsync(id);
             var huesped = await _context.Huespedes.FindAsync(estancia.HuespedId);
             var habitacion = await _context.Habitaciones.FindAsync(estancia.HabitacionId);
+            var hotel = await _context.Hoteles.FindAsync(habitacion.HotelId);
 
             if (estancia == null) return NotFound();
             estancia.Huesped = huesped;
             estancia.Habitacion = habitacion;
+            estancia.Habitacion.Hotel = hotel;
             
+
             return estancia;
         }
 
@@ -89,10 +92,11 @@ namespace MiHotel.WebApi.Controllers.API
             {
                 return NotFound();
             }
+            var habit = await _context.Habitaciones.FindAsync(estancia.HabitacionId);
+            habit.Ocupada = false;
 
             _context.Estancias.Remove(estancia);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 

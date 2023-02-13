@@ -10,22 +10,16 @@ namespace MiHotel.Maui
     {
         bool mqttConectado;
         string broker = "broker.hivemq.com";
-        string MacEsp = "clienteMAUI";
-        string topic_config = "E0:5A:1B:75:A7:44/config";
-        string topic_abrir = "E0:5A:1B:75:A7:44/abrir";
+        string CelularId = "clienteMAUI";
         string tmp = "";
         private readonly ApiService _apiService;
-        private readonly string UrlApi = Application.Current.Resources["UrlAPI"].ToString();
-
-        //private readonly string token = JsonConvert.DeserializeObject<TokenResponse>(Preferences.Get("Token", string.Empty)).Token;
+        private readonly string UrlApi = Application.Current.Resources["UrlAPI"].ToString();        
         public MainPage()
         {
             InitializeComponent();
             _apiService = new ApiService();
-            
-            //Preferences.Set("qrLlave", "f7483b94-5580-4927-911b-bc9ff6eeec33");
 
-            clsMQtt.Conectar(MacEsp, broker);
+            clsMQtt.Conectar(CelularId, broker);
             clsMQtt.Conectado += Conectado;
 
             barcodeReader.Options = new BarcodeReaderOptions()
@@ -38,7 +32,7 @@ namespace MiHotel.Maui
                 staAbrir.IsVisible = true;
                 staScanner.IsVisible = false;
                 lblAviso.IsVisible = false;
-                CargaDatos();
+                CargaDatosEstancia(false);
             }
             else
             {
@@ -47,20 +41,29 @@ namespace MiHotel.Maui
                 lblAviso.IsVisible = true;
             }            
         }
-        async void CargaDatos()
+        async void CargaDatosEstancia(bool inicial)
         {
             var res = await _apiService.GetItemAsync<Estancia>(UrlApi, "/api", $"/Estancias/{Preferences.Get("qrLlave",string.Empty)}", "");
             if (!res.IsSuccess)
             {
-                await App.Current.MainPage.DisplayAlert("Alerta", $"Error: {res.Message}", "Ok");
+                await App.Current.MainPage.DisplayAlert("Alerta!", $"Lo siento no puedo encontrar su llave, verifique en administración", "Ok");
                 return;
             }
-            Estancia tmp = (Estancia)res.Result;
+            Estancia actual = (Estancia)res.Result;
 
-            lblHotel.Text = "Mi Hotel";
-            lblHabitacion.Text = $"Su habitacion es: {tmp.Habitacion.NumeroStr}";
-            lblVence.Text = $"Vence: {tmp.Baja.ToString("g")}";
+            if (inicial)
+            {
+                clsMQtt.Publicar($"{actual.Habitacion.EspMacAdd}/config", Preferences.Get("qrLlave",string.Empty));
+                Preferences.Set("espMacAdd", actual.Habitacion.EspMacAdd);
 
+                staScanner.IsVisible = false;
+                lblAviso.IsVisible = false;
+                staAbrir.IsVisible = true;
+            }
+
+            lblHotel.Text = actual.Habitacion.Hotel.RazonSocial;
+            lblHabitacion.Text = $"Su habitacion es: {actual.Habitacion.NumeroStr}";
+            lblVence.Text = $"Vence: {actual.Baja.ToString("g")}";
         }
         private void CameraBarcodeReaderView_BarcodesDetected(object sender, BarcodeDetectionEventArgs e)
         {
@@ -68,27 +71,24 @@ namespace MiHotel.Maui
             {
                 if (tmp != e.Results[0].Value.ToString())
                 {
-                    tmp = e.Results[0].Value.ToString();
-
+                    tmp = e.Results[0].Value.ToString();                    
+                    
                     Preferences.Set("qrLlave", tmp);
-
-                    clsMQtt.Publicar(topic_config, tmp);
-
-                    staScanner.IsVisible = false;
-                    lblAviso.IsVisible = false;
-                    staAbrir.IsVisible = true;
-
                     Vibration.Vibrate();
+                    CargaDatosEstancia(true);
 
-                    Console.WriteLine($"#### Enviando: {tmp}");
+                    //clsMQtt.Publicar(topic_config, tmp);
+                    //staScanner.IsVisible = false;
+                    //lblAviso.IsVisible = false;
+                    //staAbrir.IsVisible = true;
+                    
                 }
-
             });
         }
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void OnCounterClicked(object sender, EventArgs e)
         {
+            await _apiService.DeleteEstanciaAsync(UrlApi, "/api", $"/Estancias/{Preferences.Get("qrLlave",string.Empty)}", "");
             Preferences.Clear();
-            tmp = "";
             staScanner.IsVisible = true;
             lblAviso.IsVisible = true;
             staAbrir.IsVisible = false;
@@ -97,11 +97,39 @@ namespace MiHotel.Maui
         private void Conectado(object sender, EventArgs e)
         {
             mqttConectado = true;
-            Console.WriteLine("Conectado a: " + MacEsp);
+            Console.WriteLine("Conectado a: " + CelularId);
         }
-        private void btnAbrir_Clicked(object sender, EventArgs e)
+        private async void btnAbrir_Clicked(object sender, EventArgs e)
         {
-            if (mqttConectado) clsMQtt.Publicar(topic_abrir, Preferences.Get("qrLlave", "sinllave"));
+            if (mqttConectado)
+            {
+                var res = await _apiService.GetItemAsync<Estancia>(UrlApi, "/api", $"/Estancias/{Preferences.Get("qrLlave", string.Empty)}", "");
+                if (!res.IsSuccess)
+                {
+                    await App.Current.MainPage.DisplayAlert("Alerta!", $"Lo siento no puedo encontrar su llave, verifique en administración", "Ok");
+                    return;
+                }
+                Estancia actual = (Estancia)res.Result;
+                if (DateTime.Now<=actual.Baja)
+                {
+                    lblHotel.Text = actual.Habitacion.Hotel.RazonSocial;
+                    lblHabitacion.Text = $"Su habitacion es: {actual.Habitacion.NumeroStr}";
+                    lblVence.Text = $"Vence: {actual.Baja.ToString("g")}";
+                    
+                    clsMQtt.Publicar($"{Preferences.Get("espMacAdd", string.Empty)}/abrir", Preferences.Get("qrLlave", "sinllave"));
+                    Vibration.Vibrate();
+                    Acceso acceso = new Acceso()
+                    {
+                        EstanciaId = actual.Id, 
+                        FechaHora = DateTime.Now,
+                    };
+                    await _apiService.PostAccesoAsync(UrlApi, "/api", "/Accesos", acceso, "");
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Alerta!", "Su habitación a vencido, lo siento no puedo abrir la puerta!", "Ok");
+                }                
+            }
         }
     }
 }

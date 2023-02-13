@@ -2,6 +2,7 @@
 using MiHotel.Common.Response;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace MiHotel.Maui.Services
 {
@@ -35,6 +36,43 @@ namespace MiHotel.Maui.Services
             catch (Exception ex)
             {
                 return new Response<object>
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
+        public async Task<Response<Acceso>> PostAccesoAsync(string urlAPI, string servicePrefix, string controller, Acceso acceso, string token)
+        {
+            try
+            {
+                string stringRequest = JsonConvert.SerializeObject(acceso);
+                StringContent content = new StringContent(stringRequest, Encoding.UTF8, "application/json");
+                HttpClient client = new HttpClient { BaseAddress = new Uri(urlAPI) };
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+                string url = $"{servicePrefix}{controller}";
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                string result = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Response<Acceso>
+                    {
+                        IsSuccess = false,
+                        Message = result,
+                    };
+                }
+
+                Acceso suje = JsonConvert.DeserializeObject<Acceso>(result);
+                return new Response<Acceso>
+                {
+                    IsSuccess = true,
+                    Result = suje
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<Acceso>
                 {
                     IsSuccess = false,
                     Message = ex.Message

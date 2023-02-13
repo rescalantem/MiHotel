@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Estancias</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -23,6 +23,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Baja)
+            </th>
+            <th>
+                Accesos
             </th>
             <th>
                 Llave QR
@@ -46,7 +49,10 @@
                 @Html.DisplayFor(modelItem => item.Baja)
             </td>
             <td>
-                    <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(item.Data))" height="300" width="300" />
+                <a asp-controller="Accesos" asp-action="Index" asp-route-estanciaId="@item.Id">Listado</a>
+            </td>
+            <td>
+                    <img src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(item.Data))" height="200" width="200" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
